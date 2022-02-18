@@ -44,7 +44,7 @@ def find_group_members(worksheet: Worksheet, group_no: int, group_name: str) -> 
     return group_members
 
 
-def find_member_addresses(worksheet: Worksheet, members: List[str]) -> List[Tuple[str, str]]:
+def find_member_addresses(people_ws: Worksheet, members: List[str]) -> List[Tuple[str, str]]:
     people_col = people_ws.col_values(1)
     people = people_col[1:]
     email_col = people_ws.col_values(2)
@@ -53,22 +53,36 @@ def find_member_addresses(worksheet: Worksheet, members: List[str]) -> List[Tupl
     return [(person, email) for person, email in zip(people, emails) if person in members]
 
 
-client = gspread.service_account()
+def determine_current_group_and_next(client) -> Tuple[Tuple[int, str]]:
+    cal_sheet = client.open_by_key('1tbtHGLT0jvMGMOUF7laOwIOX65szHTkAuFSfGQlwM0I')
+    roster_ws = cal_sheet.worksheet('Úklid chodby')
 
-cal_sheet = client.open_by_key('1tbtHGLT0jvMGMOUF7laOwIOX65szHTkAuFSfGQlwM0I')
-roster_ws = cal_sheet.worksheet('Úklid chodby')
+    curr_group, next_group = determine_groups(roster_ws)
+    return curr_group, next_group
 
-curr_group, next_group = determine_groups(roster_ws)
-group_no, group_name = next_group
 
-groups_sheet = client.open_by_key('1E9TVhHrWORau9sISgL-9yoCsRdnklr3LYwTPz-FMJqQ')
-groups_ws = groups_sheet.worksheet('Skupiny na klíče')
+def determine_group_members(client, group: Tuple[int, str]) -> List[Tuple[str, str]]:
+    group_no, group_name = group
 
-members = find_group_members(groups_ws, group_no, group_name)
+    groups_sheet = client.open_by_key('1E9TVhHrWORau9sISgL-9yoCsRdnklr3LYwTPz-FMJqQ')
+    groups_ws = groups_sheet.worksheet('Skupiny na klíče')
 
-people_sheet = client.open_by_key('1qXsG1OpWh2hqBq3SH91MjHp7iLeUVpKVsieJCZvZQU4')
-people_ws = people_sheet.worksheet('Lidi s klíčema')
+    members = find_group_members(groups_ws, group_no, group_name)
 
-print('prev. group:', curr_group)
-print('curr. group:', next_group)
-print('curr. group members:', find_member_addresses(people_ws, members))
+    people_sheet = client.open_by_key('1qXsG1OpWh2hqBq3SH91MjHp7iLeUVpKVsieJCZvZQU4')
+    people_ws = people_sheet.worksheet('Lidi s klíčema')
+
+    return find_member_addresses(people_ws, members)
+
+
+if __name__ == "__main__":
+    client = gspread.service_account()
+
+    curr_group, next_group = determine_current_group_and_next(client)
+
+    members = determine_group_members(client, next_group)
+
+    print('prev. group:', curr_group)
+    print('curr. group:', next_group)
+
+    print('curr. group members:', members)
