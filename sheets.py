@@ -5,6 +5,8 @@ from typing import Tuple, List
 from gspread import Worksheet
 
 # SUN
+from mailer import send_email
+
 NOTIFY_ON_DOW = 0
 
 
@@ -73,16 +75,3 @@ def determine_group_members(client, group: Tuple[int, str]) -> List[Tuple[str, s
     people_ws = people_sheet.worksheet('Lidi s klíčema')
 
     return find_member_addresses(people_ws, members)
-
-
-if __name__ == "__main__":
-    client = gspread.service_account()
-
-    curr_group, next_group = determine_current_group_and_next(client)
-
-    members = determine_group_members(client, next_group)
-
-    print('prev. group:', curr_group)
-    print('curr. group:', next_group)
-
-    print('curr. group members:', members)
