@@ -32,7 +32,7 @@ def main():
     print('curr. group members:', members)
 
     # FIXME odstranit
-    members = ["vladimirkroupa@gmail.com"]
+    members = ["vladimirkroupa@gmail.com", "vlada.k@volny.cz"]
 
     subject, body = compose_email(curr_group, next_group)
     send_email(members, subject, body, password)
