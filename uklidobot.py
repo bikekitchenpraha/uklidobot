@@ -1,9 +1,7 @@
 from typing import Tuple
 
-import gspread
-
 from mailer import send_email
-from sheets import determine_current_group_and_next, determine_group_members
+from sheets import determine_current_group_and_next, determine_group_members, connect
 
 
 def compose_email(prev_group: Tuple[int, str], next_group: Tuple[int, str]) -> Tuple[str, str]:
@@ -20,7 +18,7 @@ def compose_email(prev_group: Tuple[int, str], next_group: Tuple[int, str]) -> T
 def main():
     password = "FIXME heslo pritece zvenku"
 
-    client = gspread.service_account()
+    client = connect()
 
     curr_group, next_group = determine_current_group_and_next(client)
 

@@ -2,11 +2,9 @@ import gspread
 import datetime
 from typing import Tuple, List
 
-from gspread import Worksheet
+from gspread import Worksheet, Client
 
 # SUN
-from mailer import send_email
-
 NOTIFY_ON_DOW = 0
 
 
@@ -75,3 +73,7 @@ def determine_group_members(client, group: Tuple[int, str]) -> List[Tuple[str, s
     people_ws = people_sheet.worksheet('Lidi s klíčema')
 
     return find_member_addresses(people_ws, members)
+
+
+def connect() -> Client:
+    return gspread.service_account()
