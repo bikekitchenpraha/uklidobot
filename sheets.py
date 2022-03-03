@@ -18,8 +18,8 @@ def determine_groups(worksheet: Worksheet) -> List[Tuple[int, str]]:
     def to_group_tuple(row) -> Tuple[int, str]:
         return int(row[1]), str(row[2])
 
-    a_col = worksheet.col_values(1)
-    raw_dates = a_col[1:]
+    dates_col = worksheet.col_values(1)
+    raw_dates = dates_col[1:]
     dates = [datetime.datetime.strptime(date_str, '%d.%m.%Y') for date_str in raw_dates]
 
     year, week, _ = datetime.datetime.today().isocalendar()
@@ -75,5 +75,5 @@ def determine_group_members(client, group: Tuple[int, str]) -> List[Tuple[str, s
     return find_member_addresses(people_ws, members)
 
 
-def connect() -> Client:
-    return gspread.service_account()
+def connect(account: dict) -> Client:
+    return gspread.service_account_from_dict(account)

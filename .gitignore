@@ -1,1 +1,4 @@
 .idea
+
+# do not commit .env config
+.env
