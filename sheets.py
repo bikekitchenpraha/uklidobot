@@ -5,8 +5,6 @@ from typing import Tuple, List
 from gspread import Worksheet, Client
 
 # SUN
-from mailer import send_email
-
 NOTIFY_ON_DOW = 0
 
 
