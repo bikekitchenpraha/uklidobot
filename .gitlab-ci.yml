@@ -1,9 +1,9 @@
 stages:
-  - build
+  - build-image
   - run
 
 build-docker-image:
-  stage: build
+  stage: build-image
   image: docker:git
   services:
     - docker:dind
