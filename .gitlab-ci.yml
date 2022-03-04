@@ -1,0 +1,30 @@
+stages:
+  - build
+  - run
+
+build-docker-image:
+  stage: build
+  image: docker:git
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -f docker/Dockerfile -t registry.gitlab.com/vladimirkroupa/uklidobot .
+    - docker push registry.gitlab.com/vladimirkroupa/uklidobot
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - mailer.py
+        - sheets.py
+        - uklidobot.py
+        - docker/Dockerfile
+      when: always
+
+send-email:
+  stage: run
+  image: registry.gitlab.com/vladimirkroupa/uklidobot
+  script:
+    - python uklidobot.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always

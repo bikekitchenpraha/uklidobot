@@ -1,7 +1,11 @@
 FROM python:3.8-alpine
 
-COPY *.py /root/uklidobot/
+WORKDIR /root/uklidobot/
 
-COPY requirements.txt /root/uklidobot/
+COPY *.py ./
 
-RUN pip install -r /root/uklidobot/requirements.txt
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+CMD [ "python", "./uklidobot.py"]
