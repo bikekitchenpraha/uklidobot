@@ -44,7 +44,6 @@ def main():
     else:
         print('prev. group:', curr_group)
         print('curr. group:', next_group)
-
         print('curr. group members:', members)
 
         if RECIPIENTS_OVERRIDE:
