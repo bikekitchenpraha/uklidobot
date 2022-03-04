@@ -28,7 +28,7 @@ def send_error_email(e: Exception, password: str):
 GSHEETS_SERVICE_ACCOUNT = config('GSHEETS_SERVICE_ACCOUNT', cast=ast.literal_eval)
 SMTP_PASSWORD = config('SMTP_PASSWORD')
 ERROR_EMAIL = config('ERROR_EMAIL')
-RECIPIENTS_OVERRIDE = config('RECIPIENTS_OVERRIDE', cast=ast.literal_eval)
+RECIPIENTS_OVERRIDE = config('RECIPIENTS_OVERRIDE', default=None, cast=ast.literal_eval)
 
 
 def main():
