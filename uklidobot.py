@@ -28,7 +28,7 @@ def send_error_email(e: Exception, password: str):
 GSHEETS_SERVICE_ACCOUNT = config('GSHEETS_SERVICE_ACCOUNT', cast=ast.literal_eval)
 SMTP_PASSWORD = config('SMTP_PASSWORD')
 ERROR_EMAIL = config('ERROR_EMAIL')
-RECIPIENTS_OVERRIDE = config('RECIPIENTS_OVERRIDE', default=None, cast=ast.literal_eval)
+RECIPIENTS_OVERRIDE = config('RECIPIENTS_OVERRIDE', default=None)
 
 
 def main():
@@ -47,7 +47,7 @@ def main():
         print('curr. group members:', members)
 
         if RECIPIENTS_OVERRIDE:
-            members = RECIPIENTS_OVERRIDE
+            members = [RECIPIENTS_OVERRIDE]
 
         subject, body = compose_email(curr_group, next_group)
         send_email(members, subject, body, SMTP_PASSWORD)
