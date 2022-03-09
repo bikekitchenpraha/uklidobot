@@ -6,14 +6,22 @@ from sheets import determine_current_group_and_next, determine_group_members, co
 
 from decouple import config
 
+SHEET_LINK = "https://docs.google.com/spreadsheets/d/1tbtHGLT0jvMGMOUF7laOwIOX65szHTkAuFSfGQlwM0I/edit#gid=1191004777"
+
+GSHEETS_SERVICE_ACCOUNT = config('GSHEETS_SERVICE_ACCOUNT', cast=ast.literal_eval)
+SMTP_PASSWORD = config('SMTP_PASSWORD')
+ERROR_EMAIL = config('ERROR_EMAIL')
+RECIPIENTS_OVERRIDE = config('RECIPIENTS_OVERRIDE', default=None)
+
 
 def compose_email(prev_group: Tuple[int, str], next_group: Tuple[int, str]) -> Tuple[str, str]:
     prev_no, prev_name = prev_group
     next_no, next_name = next_group
 
     subject = "Služba na úklid chodby"
-    body = f"Tento týden mají službu: skupina {next_no} - {next_name}\n\n"
-    body += f"Minulý týden měli službu: skupina {prev_no} - {prev_name}"
+    body = f'<p>Tento týden mají službu: <strong>skupina {next_no} - {next_name}</strong></p>'
+    body += f'<p>Minulý týden měli službu: skupina {prev_no} - {prev_name}</p>'
+    body += f'<p>Tabulka na služby je <a href="{SHEET_LINK}">zde</a>.</p>'
 
     return subject, body
 
@@ -23,12 +31,6 @@ def send_error_email(e: Exception, password: str):
     subject = "Error sending uklidobot email"
     body = str(e)
     send_email(recipients, subject, body, password)
-
-
-GSHEETS_SERVICE_ACCOUNT = config('GSHEETS_SERVICE_ACCOUNT', cast=ast.literal_eval)
-SMTP_PASSWORD = config('SMTP_PASSWORD')
-ERROR_EMAIL = config('ERROR_EMAIL')
-RECIPIENTS_OVERRIDE = config('RECIPIENTS_OVERRIDE', default=None)
 
 
 def main():

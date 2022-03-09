@@ -1,14 +1,14 @@
 import smtplib
 import ssl
-from email.message import Message
+from email.message import Message, EmailMessage
 from typing import List
-from email.mime.text import MIMEText
 
 EMAIL_ACC = "bikekitchenpraha@riseup.net"
 
 
-def send_email(recipients: List[str], subject: str, msg_body: str, password: str):
-    msg = MIMEText(msg_body)
+def send_email(recipients: List[str], subject: str, html_body: str, password: str):
+    msg = EmailMessage()
+    msg.set_content(html_body, subtype='html')
 
     msg['Subject'] = subject
     msg['From'] = EMAIL_ACC
