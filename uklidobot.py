@@ -27,7 +27,7 @@ def compose_email(prev_group: Tuple[int, str], next_group: Tuple[int, str]) -> T
 
 
 def send_error_email(e: Exception, password: str):
-    recipients = ERROR_EMAIL_RECIPIENTS
+    recipients = ERROR_EMAIL
     subject = "Error sending uklidobot email"
     body = str(e)
     send_email(recipients, subject, body, password)
