@@ -50,6 +50,9 @@ def main():
 
         if RECIPIENTS_OVERRIDE:
             members = [RECIPIENTS_OVERRIDE]
+        else:
+            # Extract members' email addresses
+            members = [member[1] for member in members if member[1] != ""]
 
         subject, body = compose_email(curr_group, next_group)
         send_email(members, subject, body, SMTP_PASSWORD)
