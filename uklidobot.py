@@ -38,7 +38,6 @@ def main():
         client = connect(GSHEETS_SERVICE_ACCOUNT)
 
         curr_group, next_group = determine_current_group_and_next(client)
-
         members = determine_group_members(client, next_group)
     except Exception as ex:
         send_error_email(ex, SMTP_PASSWORD)
@@ -48,11 +47,13 @@ def main():
         print('curr. group:', next_group)
         print('curr. group members:', members)
 
+        recipients = [email for _, email in members]
+
         if RECIPIENTS_OVERRIDE:
-            members = [RECIPIENTS_OVERRIDE]
+            recipients = [RECIPIENTS_OVERRIDE]
 
         subject, body = compose_email(curr_group, next_group)
-        send_email(members, subject, body, SMTP_PASSWORD)
+        send_email(recipients, subject, body, SMTP_PASSWORD)
 
 
 if __name__ == "__main__":
